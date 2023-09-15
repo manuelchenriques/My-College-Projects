@@ -2,7 +2,7 @@
 
 Project developed alongside:
 - https://github.com/yeetus-deletus-neves
-- https://github.com/Goku-maker
+- https://github.com/bigskydiver
 
 This project is an android implementation of the Battleships project (Development of Web Applications project) and makes use of the API implemented there.
 
