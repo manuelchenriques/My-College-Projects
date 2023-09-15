@@ -1,0 +1,62 @@
+<h1>Groups</h1><hr>
+
+{{#if userGroups}}
+	<table class="table table-striped table-borderless" id="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Games</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each userGroups}}
+				<tr id='entry-{{id}}'>
+					<td class="align-middle">{{this.name}}</td>
+					<td class="align-middle">{{this.description}}</td>
+					<td class="align-middle">
+						{{#if this.games}}
+							{{#each this.games}}
+								{{this.gameName}}
+								{{#unless @last}}<br>{{/unless}}
+							{{/each}}
+						{{else}}
+							<em>NONE</em>
+						{{/if}}
+					</td>
+					<td class="align-middle">
+						<form action='/group/{{id}}' method='GET'>
+							<button type='submit' class="btn btn-secondary mb-2">Details</button>
+						</form>
+						<input type="button" value="Delete" id="groupDel-{{id}}" class="btn btn-dark btn-sm mb-2 delete">
+                        <input type="button" class="btn btn-dark btn-sm mb-2" onclick="location.href = '/editGroupPage/{{id}}'" value="Edit">
+					</td>
+				</tr>
+			{{/each}}
+		</tbody>
+	</table>
+{{else}}
+	{{#unless error}}
+		<p><em>(empty)</em></p>
+	{{/unless}}
+{{/if}}
+{{#if username}}
+	<div class="text-center">
+		<a class="alert-dark" href="/createGroup">
+			<button type="button" class="btn btn-lg btn-success">Create Group</button>
+		</a>
+	</div>
+{{/if}}
+<br><hr>
+
+{{#if error}}
+	<p><strong>ERROR:</strong> {{error}}</p>
+	<br>
+{{/if}}
+
+{{#if userGroups}}
+	<script src="/static-files/deleteGroup.js"></script>
+	<script>
+		deleteGroup();
+	</script>
+{{/if}}

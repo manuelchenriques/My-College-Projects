@@ -1,0 +1,28 @@
+<h1>Create User</h1>
+<div>
+    <form class="form-control" action="/user" method="POST" oninput='repassword.setCustomValidity(password.value != repassword.value ? "Passwords do not match." : "")'>
+
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Name" name="username" required>
+            <br>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password" name="password" required>
+            <br>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Re-introduce Password" name="repassword" required>
+            <br>
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-dark align-content-center">Submit</button>
+    </form>
+    <br>
+</div>
+
+{{#if error}}
+<p><strong>ERROR:</strong> {{error}}</p>
+<br>
+{{/if}}

@@ -1,0 +1,26 @@
+<h1>Create a Group</h1>
+<div>
+    <form class="form-control" action="/groups" method="POST">
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+            <br>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea type="text" class="form-control" id="description" name="description" placeholder="Description"></textarea>
+            <br>
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-dark align-content-center">Submit</button><br>
+        <button type="button" class="btn btn-secondary btn-lg float-start" onclick="history.back()">Back</button>
+    </form>
+    <br>
+</div>
+
+{{#if error}}
+	<p><strong>ERROR:</strong> {{error}}</p>
+    <br>
+{{/if}}

@@ -1,0 +1,38 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^2.3.2",
+    "@mui/icons-material": "^5.10.16",
+    "@mui/material": "^5.10.17",
+    "@use-it/interval": "^1.0.0",
+    "js-cookie": "^3.0.1",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.1.1",
+    "react-icons": "^4.7.1",
+    "react-router-dom": "^6.4.3",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "css-loader": "^6.7.2",
+    "file-loader": "^6.2.0",
+    "less-loader": "^11.1.0",
+    "loader": "^2.1.1",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.8.4",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  }
+}

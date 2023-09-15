@@ -1,0 +1,114 @@
+{{#if game}}
+<h1><em>{{game.gameName}}</em></h1><hr><br>
+{{/if}}
+
+{{#if error}}
+        <div class="alert alert-danger d-flex rounded alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <p class="alert-heading"><strong>ERROR:</strong> {{error}}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+{{/if}}
+
+{{#if game}}
+	<img src="{{game.imgUrl}}" alt="{{game.gameName}}_img" height="512" width="512" class="rounded mx-auto d-block">
+	<table class="table table-striped table-borderless">
+		<tr>
+			<td>Game:</td>
+			<td>{{game.gameName}}</td>
+		</tr>
+		<tr>
+			<td>URL:</td>
+			<td>
+				<a href="{{game.gameUrl}}">{{game.gameUrl}}</a>
+			</td>
+		</tr>
+		<tr>
+			<td>ID:</td>
+			<td>{{game.gameID}}</td>
+		</tr>
+		<tr>
+			<td>Description:</td>
+			<td>{{{game.description}}}</td>
+		</tr>
+		<tr>
+			<td>Mechanics:</td>
+			<td>
+                {{#if game.mechanics}}
+                    {{#each game.mechanics}}
+                        {{this}}
+                        {{#unless last}}<br>{{/unless}}
+                    {{/each}}
+                {{else}}
+                    <em>NONE</em>
+                {{/if}}
+			</td>
+		</tr>
+		<tr>
+			<td>Categories:</td>
+			<td>
+                {{#if game.categories}}
+                    {{#each game.categories}}
+                        {{this}}
+                        {{#unless last}}<br>{{/unless}}
+                    {{/each}}
+                {{else}}
+                    <em>NONE</em>
+                {{/if}}
+			</td>
+		</tr>
+	</table>
+	<hr>
+    <div>
+        <button type="button" class="btn btn-secondary btn-lg"onclick="history.back()">Back</button>
+        {{#if username}}
+            <button type="button" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add to a group</button>
+        {{/if}}
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Group List</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    {{#if groups}}
+                        <div class="modal-body">
+                            <form name="modalForm" id="modalForm" action="/groups/games" method="POST">
+                                <label for="gameName"><strong>Game: {{game.gameName}}</strong></label>
+                                <input name="gameID" value="{{game.gameID}}" type="hidden">
+                                <input name="gameName" value="{{game.gameName}}" type="hidden"><br>
+                                <select class="form-select" name="selectID" id="selectID" required>
+                                    <option value="" selected hidden>Select group..</option>
+                                    {{#each groups}}
+                                        <option value="{{this.id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select><br>
+                                <script>
+                                    document.querySelector('#modalForm').selectID.onchange = function (){
+                                        document.querySelector('#modalForm').action = `/groups/${this.value}/games`;
+                                    }
+                                </script>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-dark">Confirm</button>
+                            </form>
+                        </div>
+                    {{else}}
+                        <div class="modal-body">
+                            <p>You have no groups!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <br><br>
+    </div>
+{{/if}}
+
+

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Battleships</string>
+    <string name="leaderboard_button_text">Leaderboard</string>
+    <string name="play_games_button_text">Play</string>
+    <string name="register_button_text">Register</string>
+    <string name="sign_in_button_text">Sign In</string>
+</resources>

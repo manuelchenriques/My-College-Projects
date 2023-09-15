@@ -1,0 +1,34 @@
+{{#if header}}
+	<h1>{{header}}</h1><br>
+{{/if}}
+
+{{#if query}}
+    <hr>
+	<p>Searched for: <strong>{{query}}</strong></p>
+{{/if}}
+
+{{#if games}}
+    <hr>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {{#each games}}
+            <div class="col">
+                <div class="card h-100 border-dark" style="color:black">
+                    <img src="{{this.imgUrl}}" class="card-img-top" alt="..." width="250" height="250">
+                    <div class="card-body"><hr>
+                        <h5 class="card-title">{{this.gameName}}</h5>
+                        <a class="stretched-link" href="/game/{{this.gameID}}?"></a>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div><hr>
+{{/if}}
+
+<button type="button" class="btn-secondary btn-lg" onclick="history.back()">Back</button>
+
+{{#if error}}
+	<p><strong>ERROR:</strong> {{error}}</p>
+    <br>
+    <button type="button" class="btn-secondary btn-lg" onclick="history.back()">Back</button>
+    <br><br>
+{{/if}}

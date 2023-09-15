@@ -1,0 +1,50 @@
+{{#if group}}
+{{#if creatorUser.username}}
+<h1><em>{{group.name}} - {{creatorUser.username}}</em></h1><hr><br>
+{{/if}}
+{{/if}}
+
+{{#if group}}
+	<table class="table table-striped table-borderless">
+		<tr>
+			<td class="align-middle">Name</td>
+			<td class="align-middle">{{group.name}}</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td class="align-middle">Description</td>
+			<td class="align-middle">{{group.description}}</td>
+            <td></td>
+		</tr>
+		<tr>
+        <td rowspan="{{group.games.length}}" class="align-middle">Games</td>
+            {{#if group.games}}
+				{{#each group.games}}
+					<td class="align-middle"><ul>{{this.gameName}}</ul></td>
+					{{#unless @last}}{{/unless}}
+					<td>
+						<form action=/game/{{this.gameID}} method='GET'>
+							<button type='submit' class="btn btn-secondary mb-2 btn-sm">Details</button>
+						</form>
+                        <button type='button' id="{{../group.id}} {{this.gameID}}" class="btn btn-dark mb-2 btn-sm">Delete</button>
+					</td>
+				</tr>
+				{{/each}}{{else}}
+                <td><em>NONE</em></td>
+                <td></td>
+			{{/if}}
+		</tr>
+	</table>
+    <br><hr>
+    <script src="/static-files/deleteGame.js"></script>
+    <script>
+        deleteGame();
+    </script>
+{{/if}}
+
+{{#if error}}
+	<p><strong>ERROR:</strong> {{error}}</p>
+    <br>
+{{/if}}
+<button type="button" class="btn-secondary btn-lg" onclick="history.back()">Back</button>
+<br><br>

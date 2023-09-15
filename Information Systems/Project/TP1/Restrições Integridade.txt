@@ -1,0 +1,38 @@
+JOGADOR
+
+- id gerado pelo sistema;
+- email e username únicos e obrigatórios;
+- Toma estados 'Ativo', 'Inativo' ou 'Banido'.
+
+-------------------------------------------------------------------------------------
+JOGOS
+
+- Referência alfanumérica de dimensão 10;
+- Nome obrigatório e único.
+
+-------------------------------------------------------------------------------------
+PARTIDA
+
+- Número sequencial e único para cada jogo;
+- Pode ser normal ou de multi-jogador;
+- Partidas normais dificuldade 1 a 5;
+- É necessário guardar as pontuações de cada jogador numa partida multi-jogador;
+- estado de multi-jogador pode tomar valores 'Por iniciar', 'A aguardar jogadores',
+'Em curso' e 'Terminada';
+- Apenas jogadores da região da partida podem jogar nessa partida;
+- Tempo inicial é anterior ao tempo final.
+
+-------------------------------------------------------------------------------------
+CRACHA
+
+- Nome único para cada jogo.
+
+-------------------------------------------------------------------------------------
+CONVERSA
+
+- Identificador gerado pelo sistema.
+
+-------------------------------------------------------------------------------------
+MENSAGEM
+
+- Número de ordem único e sequencial como identificador.

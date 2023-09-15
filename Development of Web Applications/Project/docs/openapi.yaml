@@ -1,0 +1,782 @@
+openapi: 3.0.3
+info:
+  title: Battleship Application API
+  description: |-
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+  
+paths:
+  /:
+    get:
+      tags:
+        - home
+      summary: get home page
+      operationId: get home
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/home'
+  /about:
+    get:
+      tags:
+        - home
+      summary: get info about api
+      operationId: get about
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/about'
+
+  /user:
+    get:
+      tags:
+        - user
+      summary: gets user info
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/UserHomeOutputModel'
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can be used by anyone who wishes to create a user for themselves.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/vnd.siren+json:
+            schema:
+              $ref: '#/components/schemas/UserCreateInputModel'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/CreateUser'
+        '400':
+          description: insecure password
+        '409':
+          description: user already exists
+  /me:
+    get:
+      tags:
+        - user
+      summary: get info about user
+      operationId: getSelf
+      parameters:
+        - in: header
+          name: security
+          required: true
+          schema:
+            type: string
+            example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/me'
+  /user/signIn:
+    post:
+      tags:
+        - user
+      summary: Creates a token for a user
+      description: Creates a token for the user, after confirming username and password passes through the request body
+      operationId: createToken
+      requestBody:
+        content:
+          application/vnd.siren+json:
+            schema:
+              $ref: '#/components/schemas/UserCreateInputModel'
+      responses:
+        '200':
+          description: Token created
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/tokenOutput'
+        '401':
+          description: authentication failed
+  /user/stats:
+    get:
+      tags:
+        - user
+      summary: Sees user's own stats
+      description: Gets user's stats based on the token passed through the authorization header
+      operationId: getStats
+      parameters:
+        - in: header
+          name: security
+          schema:
+            type: string
+            example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+          required: true  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/StatResponse'
+        '404':
+          description: user not found
+  /user/leaderboard:
+    get:
+      tags:
+        - user
+      summary: Gets the leaderboard
+      description: Gets the leaderboard without the need of authorization, order by either games played or games won
+      operationId: getLeaderboard
+      parameters:
+        - in: header
+          name: orderBy
+          schema:
+            type: string
+            example: "Wins"
+        - in: header
+          name: top
+          schema:
+            type: number
+            example: 10
+        - in: header
+          name: idx
+          schema:
+            type: number
+            example: 10
+        - in: header
+          name: name
+          schema:
+            type: string
+            example: "username"
+      responses:
+        '201':
+          description: leaderboard found
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/leaderboard'
+        '404':
+          description: order by invalid
+  /user/{id}:
+    get:
+      tags:
+        - user
+      summary: get user info by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: "userID"
+          required: true
+      responses:
+        '201':
+          description: user found
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/UserHomeOutputModel'
+        '401':
+          description: authentication failed
+        '404':
+          description: user not found
+
+  /game:
+    post:
+      tags:
+        - game
+      summary: create game
+      parameters:
+        - in: header
+          name: security
+          schema:
+            type: string
+            example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+          required: true
+      requestBody:
+        description: Created user object
+        content:
+          application/vnd.siren+json:
+            schema:
+              $ref: "#/components/schemas/gamecreation"
+      responses:
+        '201':
+          description: game created
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '404':
+          description: game creation failed
+  /game/join:
+    post:
+      tags:
+      - game
+      summary: join game
+      parameters:
+        - in: header
+          name: security
+          schema:
+            type: string
+            example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+          required: true
+      responses:
+        '200':
+          description: game created
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '404':
+          description: game not found
+        '500':
+          description: internal servor error
+  /game/fast:
+    post:
+      tags:
+        - game
+      summary: create or join game
+      parameters:
+        - in: header
+          name: security
+          schema:
+            type: string
+            example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+          required: true
+      requestBody:
+        description: Created user object
+        content:
+          application/vnd.siren+json:
+            schema:
+              $ref: "#/components/schemas/gamecreation"
+      responses:
+        '201':
+          description: game created
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '200':
+          description: game joined
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '404':
+          description: game creation failed
+  /game/{id}:
+    get:
+      tags:
+      - game
+      summary: get game by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: "eeefdd87-ec51-4fb4-b443-03e5f63c3611"
+          required: true
+        - in: header
+          name: security
+          schema:
+            type: string
+            example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+          required: true
+      responses:
+        '200':
+          description: game found
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '404':
+          description: game not found
+        '405':
+          description: action not permited
+  /game/{id}/ready:
+    post:
+      tags:
+      - game
+      summary: player readys up
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+          example: 10
+        required: true
+      - in: header
+        name: security
+        schema:
+          type: string
+          example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+        required: true
+      responses:
+        '200':
+          description: got state
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '400':
+          description: missing ships
+        '405':
+          description: action not permited
+  /game/{id}/ship:
+    post:
+      tags:
+      - game
+      summary: place ships
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+          example: 10
+        required: true
+      - in: header
+        name: security
+        schema:
+          type: string
+          example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+        required: true
+      requestBody:
+        description: Created user object
+        content:
+          application/vnd.siren+json:
+            schema:
+              $ref: "#/components/schemas/placements"
+      responses:
+        '200':
+          description: placed correctly
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '400':
+          description: invalid ship type
+        '404':
+          description: game not found
+  /game/{id}/play:
+     post:
+      tags:
+      - game
+      summary: place ships
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+          example: 10
+        required: true
+      - in: header
+        name: security
+        schema:
+          type: string
+          example: "Bearer 3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+        required: true
+      requestBody:
+        description: Created user object
+        content:
+          application/vnd.siren+json:
+            schema:
+              $ref: "#/components/schemas/play"
+      responses:
+        '200':
+          description: play made
+          content:
+            application/vnd.siren+json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '400':
+          description: invalid play
+
+components:
+  schemas:
+    home:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items:
+            type: string
+          example: [ "HomeOutputModel" ]
+        properties:
+          type: object
+          properties:
+            credits:
+              type: string
+              example: "Made for learning purposes"
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    about:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items:
+            type: string
+          example: [ "AboutOutputModel" ]
+        properties:
+          type: object
+          properties:
+            developers:
+              type: array
+              items:
+                $ref: '#/components/schemas/developers'
+            from:
+              type: string
+              example: "The place"
+            course:
+              type: string
+              example: "That course"
+            professor:
+              type: string
+              example: "This professor"
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    developers:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Lead Developer"
+        number:
+          type: number
+          example: 5645
+        publicMail:
+          type: string
+          example: "thismail@somewhere.com"
+        gitPage:
+          type: string
+          example: "https://github.com/GitURL"
+    play:
+      type: array
+      items:
+        $ref: "#/components/schemas/position"
+    CreateUser:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items:
+            type: string
+          example: [ "UserHomeOutputModel" ]
+        properties:
+          type: object
+          items:
+            $ref: '#/components/schemas/UserHomeOutputModel'
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    UserHomeOutputModel:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "101"
+        username:
+          type: string
+          example: "username"
+        stats:
+          type: number
+          example: 1
+    position:
+      type: object
+      properties:
+        x:
+          type: number
+          example: 2
+        y:
+          type: number
+          example: 2
+    placement:
+      type: object
+      properties:
+        orientation:
+          type: string
+          example: "down"
+        head:
+          $ref: "#/components/schemas/position"
+        shiptype:
+          $ref: "#/components/schemas/shiptype"
+    placements:
+      type: array
+      items:
+        $ref: "#/components/schemas/placement"
+    message:
+      type: string
+      example: "put state message here"
+    GameImage:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        player1:
+          type: string
+          example: "dasdadasd"
+        player2:
+          type: string
+          example: "dasgfdgasd"
+        gamestate:
+          type: string
+          example: "SP"
+        myfleet:
+          type: object
+        opponentfleet:
+          type: object
+        myboard:
+          type: object
+        opponentboard:
+          type: object
+        remainingtime:
+          type: number
+          example: 1000000
+    game:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items:
+            type: string
+          example: [ "GameImage" ]
+        properties:
+          $ref: '#/components/schemas/GameImage'
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+
+    shiptype:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: "Destroyer"
+        size:
+          type: number
+          example: 2
+    fleetschemaentry:
+      type: object
+      properties:
+        shiptype:
+          $ref: "#/components/schemas/shiptype"
+        count:
+          type: number
+          example: 1
+    gamecreation:
+      type: object
+      properties:
+        boardX:
+          type: number
+          example: 10
+        boardY:
+          type: number
+          example: 10
+        fleetSchema:
+          type: array
+          items:
+            $ref: "#/components/schemas/fleetschemaentry"
+        shotsperround:
+          type: number
+          example: 5
+        setupTime:
+          type: number
+          example: 100000
+        roundTime:
+          type: number
+          example: 100000
+    me:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "eeefdd87-ec51-4fb4-b443-03e5f63c3611"
+        username:
+          type: string
+          example: "Yeetus"
+        stats:
+          type: object
+          properties:
+            gamesplayed:
+              type: number
+              example: 10
+            gameswon:
+              type: number
+              example: 5
+            winRate:
+              type: number
+              example: 0.5
+              
+    leaderboard:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items:
+            type: string
+          example: [ "LeaderboardOutputModel" ]
+        properties:
+          type: object
+          properties:
+            stats:
+              type: array
+              items:
+                $ref: '#/components/schemas/stats'
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    stats:
+      type: object
+      properties:
+            id:
+              type: number
+              example: 1
+            username:
+              type: string
+              example: "usernameHere"
+            gamesPlayed:
+              type: number
+              example: 10
+            gamesWon:
+              type: number
+              example: 5
+    token:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "3F-IfbLAcC3zfK71BSkesKABeTBZBzp5LdNCXpf1jD0="
+    UserCreateInputModel:
+      type: object
+      properties:
+        username:
+          type: string
+          example: theUser
+        password:
+          type: string
+          example: 'Th1s1sAP4ssword'
+    tokenOutput:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items:
+            type: string
+          example: [ "UserTokenCreateOutputModel" ]
+        properties:
+          type: object
+          properties:
+            token:
+              type: string
+              example: "weptgnejtnwpntowet"
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    UserResponse:
+      type: object
+      properties:
+        clazz:
+          type: array
+          items: 
+            $ref: string
+          example: ["user"]
+        properties:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "eeefdd87-ec51-4fb4-b443-03e5f63c3611"
+            username:
+              type: string
+              example: "Yeetus"
+            stats:
+              type: number
+              example: 1
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    StatResponse:
+      type: object
+      properties:
+        properties:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            gamesplayed:
+              type: number
+              example: 10
+            gameswon:
+              type: number
+              example: 5
+        siren:
+          type: object
+          items:
+            $ref: '#/components/schemas/siren'
+    siren:
+      type: object
+      properties:
+        links:
+            $ref: '#/components/schemas/Rels'
+        entities:
+            $ref: '#/components/schemas/Entities'
+        actions:
+            $ref: '#/components/schemas/Actions'
+    Entities:
+      type: object
+      properties:
+        properties:
+          type: object
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rels'
+    Actions:
+      type: object
+    
+    Rels:
+      type: object
+      properties:
+        rel:
+          type: array
+          items:
+            type: string
+          example: ["self"]
+        href:
+          type: string
+          example: "/user/eeefdd87-ec51-4fb4-b443-03e5f63c3611"
+        
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'

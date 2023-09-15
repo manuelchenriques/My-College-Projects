@@ -1,0 +1,1 @@
+gcloud functions deploy getInstancesIps --allow-unauthenticated --project=cn2223-t1-g01 --region=europe-west1 --entry-point=Entrypoint --runtime=java11 --trigger-http --source=target/deployment --service-account=cn2223-t1-g01@appspot.gserviceaccount.com

@@ -1,0 +1,1450 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.01",
+    "title": "BORGA API",
+    "description": "Manage Board Game Collections"
+  },
+  "tags": [
+    {
+      "name": "UserRequests",
+      "description": "Operations user-related"
+    },
+    {
+      "name": "GameRequests",
+      "description": "Operations game-related"
+    },
+    {
+      "name": "GroupRequests",
+      "description": "Operations Group-related"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/global/user": {
+      "post": {
+        "tags": [
+          "UserRequests"
+        ],
+        "summary": "Adds new user",
+        "description": "Sends an HTTP POST request to the server with a User object",
+        "security": [],
+        "requestBody": {
+          "description": "User Object to be sent in the request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request conflicts with the current state of the server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conflict"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "UserRequests"
+        ],
+        "summary": "Returns a user object",
+        "description": "Sends a HTTP GET request to the server to retrieve a User object",
+        "security": [],
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user requested by the client",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserGetAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found for the query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/global/games": {
+      "get": {
+        "tags": [
+          "GameRequests"
+        ],
+        "summary": "Find a game by name",
+        "description": "Uses Board Game Atlas API to find a game corresponding to the query",
+        "security": [],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Query to find a Game",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "root"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board Games have been found successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GamesByNameResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Board Game found for the query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Board Game Atlas API is not responding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/global/games/{gameID}": {
+      "get": {
+        "tags": [
+          "GameRequests"
+        ],
+        "summary": "Object containing details regarding said game",
+        "description": "Returns an object containing details of the game",
+        "security": [],
+        "parameters": [
+          {
+            "name": "gameID",
+            "in": "path",
+            "description": "game ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "TAAifFP590"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details retrived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameDetailsAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Board Game found for the query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Board Game Atlas API is not responding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/global/games/popular": {
+      "get": {
+        "tags": [
+          "GameRequests"
+        ],
+        "summary": "Returns the most popular games",
+        "description": "Returns a list containing the most popular games",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Most popular games retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PopularGameListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Board Game found for the query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Board Game Atlas API is not responding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/global/groups": {
+      "post": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Adds new group",
+        "description": "Creates a new group when given a valid name and description",
+        "requestBody": {
+          "description": "Group Object to be sent on request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Group"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Group added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Array containing user groups",
+        "description": "Returns an array containing all the groups belonging to the user",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user who the groups belong to",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all Groups from a user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Groups found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/global/groups/{groupID}": {
+      "put": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Updates group details",
+        "description": "Replaces the specified Group Object with an updated one",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user who the group belongs to",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated Group Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Group updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Group details",
+        "description": "Returns the Group Object containing all it's details",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user who the group belongs to",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group details obtained successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Group found for the query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Removes a group",
+        "description": "Removes a group through it's ID",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user who the group belongs to",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupAppDeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Group found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/global/groups/{groupID}/games": {
+      "post": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Adds a game to the group",
+        "description": "Adds a game to the array of games inside the Group Object",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user who the group belongs to",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "GameID to be added",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Game to add to group",
+                "required": [
+                  "gameID"
+                ],
+                "properties": {
+                  "gameID": {
+                    "type": "string",
+                    "description": "Game ID",
+                    "example": "TAAifFP590"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Game added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupGamesAddAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Group found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "GroupRequests"
+        ],
+        "summary": "Deletes a game from a group",
+        "description": "Deletes a game inside the array of games inside the Group Object",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "in": "header",
+            "name": "gameID",
+            "description": "Game ID to be removed",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "TAAifFP590"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "ID of the user who the group belongs to",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game removed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupGamesRemoveAppResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad sintax on request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Game found or no group found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid response from gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Game": {
+        "type": "object",
+        "description": "Game Object data",
+        "required": [
+          "gameID",
+          "gameName",
+          "gameUrl",
+          "imgUrl"
+        ],
+        "properties": {
+          "gameID": {
+            "type": "string",
+            "description": "Game id",
+            "example": 2301
+          },
+          "gameName": {
+            "type": "string",
+            "description": "Game official name",
+            "example": "Catan"
+          },
+          "gameUrl": {
+            "type": "string",
+            "description": "Game url from Board Games Atlas",
+            "example": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan"
+          },
+          "imgUrl": {
+            "type": "string",
+            "description": "Image url from Board Games Atlas",
+            "example": "https://d2k4q26owzy373.cloudfront.net/350x350/games/uploaded/1629324722072.jpg?format=webp"
+          }
+        }
+      },
+      "UserCreation": {
+        "type": "object",
+        "description": "User Object data",
+        "required": [
+          "username",
+          "password"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User name",
+            "example": "Johnson"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Hasgdf3423"
+          }
+        }
+      },
+      "Group": {
+        "type": "object",
+        "description": "Group Object data",
+        "required": [
+          "name",
+          "description",
+          "createdBy"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Group name",
+            "example": "MyFavorites"
+          },
+          "description": {
+            "type": "string",
+            "description": "Group description",
+            "example": "These are my favorite games"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "User id",
+            "example": "1"
+          }
+        }
+      },
+      "GroupUpdate": {
+        "type": "object",
+        "description": "Updated Group data",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Group name",
+            "example": "Favorites"
+          },
+          "description": {
+            "type": "string",
+            "description": "Group description",
+            "example": "These are still my favorite games"
+          }
+        }
+      },
+      "UserAppResponse": {
+        "type": "object",
+        "description": "Response used for when a User related command executes as planned",
+        "required": [
+          "user",
+          "token"
+        ],
+        "properties": {
+          "user": {
+            "type": "object",
+            "description": "The User Object",
+            "required": [
+              "id",
+              "username",
+              "password"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User id",
+                "example": "53c4a7f3-e769-4a2d-8bf0-2ca7f4957aaa"
+              },
+              "username": {
+                "type": "string",
+                "description": "User name",
+                "example": "Johnson"
+              },
+              "password": {
+                "type": "string",
+                "description": "User password",
+                "example": "Hasgdf3423"
+              }
+            }
+          },
+          "token": {
+            "type": "string",
+            "description": "The User's token",
+            "example": "5dbf9a0a-12db-4a35-8bb8-0f848ac1a27b"
+          }
+        }
+      },
+      "UserGetAppResponse": {
+        "type": "object",
+        "description": "Response used for when a User related command executes as planned",
+        "required": [
+          "id",
+          "username",
+          "password"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User id",
+            "example": "53c4a7f3-e769-4a2d-8bf0-2ca7f4957aaa"
+          },
+          "username": {
+            "type": "string",
+            "description": "User name",
+            "example": "Johnson"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Hasgdf3423"
+          }
+        }
+      },
+      "GamesByNameResponse": {
+        "type": "array",
+        "description": "List of games collected by query",
+        "items": {
+          "$ref": "#/components/schemas/Game"
+        }
+      },
+      "GameDetailsAppResponse": {
+        "type": "object",
+        "description": "Object containing the name, ID, description, url, imageURL, mechanics and categories of the game",
+        "required": [
+          "gameName",
+          "gameID",
+          "description",
+          "gameUrl",
+          "imgUrl",
+          "mechanics",
+          "categories"
+        ],
+        "properties": {
+          "gameName": {
+            "type": "string",
+            "description": "Game name",
+            "example": "catan"
+          },
+          "gameID": {
+            "type": "string",
+            "description": "Game ID",
+            "example": "A42SDaR"
+          },
+          "description": {
+            "type": "string",
+            "description": "A short description regarding the game",
+            "example": "This game is lots of fun!"
+          },
+          "gameUrl": {
+            "type": "string",
+            "description": "URL of the game on Board Games Atlas website"
+          },
+          "imgUrl": {
+            "type": "string",
+            "description": "URL of the image used by Board Games Atlas"
+          },
+          "mechanics": {
+            "type": "array",
+            "description": "Array containing all the mechanics names",
+            "items": {
+              "type": "string"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "description": "Array containing all the categories names",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PopularGameListResponse": {
+        "type": "array",
+        "description": "List containing popular games",
+        "items": {
+          "$ref": "#/components/schemas/Game"
+        }
+      },
+      "GroupAppResponse": {
+        "type": "object",
+        "description": "Response used for when a Group related command executes as planned",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "games",
+          "createdBy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Group id",
+            "example": "31cf4841-7f95-4d60-a3c8-602504167f6a"
+          },
+          "name": {
+            "type": "string",
+            "description": "Group name",
+            "example": "MyFavorites"
+          },
+          "description": {
+            "type": "string",
+            "description": "Group description",
+            "example": "These are my favorite games"
+          },
+          "games": {
+            "type": "array",
+            "description": "Group stored game ids",
+            "items": {
+              "type": "string",
+              "description": "ID from Game Object belonging to Group Object"
+            }
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "ID from User Object who created the Group Object",
+            "example": "53c4a7f3-e769-4a2d-8bf0-2ca7f4957aaa"
+          }
+        }
+      },
+      "GroupListResponse": {
+        "type": "array",
+        "description": "List of all Group Objects",
+        "items": {
+          "$ref": "#/components/schemas/GroupAppResponse"
+        }
+      },
+      "GroupAppDeleteResponse": {
+        "type": "object",
+        "description": "Response for when a Group Object is deleted",
+        "required": [
+          "groupID"
+        ],
+        "properties": {
+          "groupID": {
+            "type": "string",
+            "description": "ID from Group Object to be deleted",
+            "example": "31cf4841-7f95-4d60-a3c8-602504167f6a"
+          }
+        }
+      },
+      "GroupGamesAddAppResponse": {
+        "type": "object",
+        "description": "Response for when a Game Object ID is added to a Group Object",
+        "required": [
+          "gameID"
+        ],
+        "properties": {
+          "gameID": {
+            "type": "string",
+            "description": "ID from Game Object to be added",
+            "example": "TAAifFP590"
+          }
+        }
+      },
+      "GroupGamesRemoveAppResponse": {
+        "type": "object",
+        "description": "Response for when a Game Object ID is deleted from a Group Object",
+        "required": [
+          "gameID"
+        ],
+        "properties": {
+          "gameID": {
+            "type": "string",
+            "description": "ID from Game Object to be deleted",
+            "example": "TAAifFP590"
+          }
+        }
+      },
+      "AppErrorInfo": {
+        "description": "Additional information about the error",
+        "nullable": true,
+        "anyOf": [
+          {
+            "type": "object"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "example": {}
+      },
+      "BadRequest": {
+        "type": "object",
+        "description": "Application error",
+        "required": [
+          "code",
+          "name",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "int32",
+            "description": "HTTP Bad Request Code",
+            "example": 400
+          },
+          "name": {
+            "type": "string",
+            "description": "HTTP Bad Request Name",
+            "example": "Bad Request"
+          },
+          "message": {
+            "type": "string",
+            "description": "HTTP Bad Request Message",
+            "example": "Request not understood by the server due to invalid syntax"
+          },
+          "info": {
+            "$ref": "#/components/schemas/AppErrorInfo"
+          }
+        }
+      },
+      "BadGateway": {
+        "type": "object",
+        "description": "Application error",
+        "required": [
+          "code",
+          "name",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "int32",
+            "description": "HTTP Bad Gateway Code",
+            "example": 502
+          },
+          "name": {
+            "type": "string",
+            "description": "HTTP Bad Gateway Name",
+            "example": "Bad Gateway"
+          },
+          "message": {
+            "type": "string",
+            "description": "HTTP Bad Gateway Message",
+            "example": "Got an invalid response while working on the Gateway to get a response"
+          },
+          "info": {
+            "$ref": "#/components/schemas/AppErrorInfo"
+          }
+        }
+      },
+      "NotFound": {
+        "type": "object",
+        "description": "Application error",
+        "required": [
+          "code",
+          "name",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "int32",
+            "description": "HTTP Not Found Code",
+            "example": 404
+          },
+          "name": {
+            "type": "string",
+            "description": "HTTP Not Found Name",
+            "example": "Not Found"
+          },
+          "message": {
+            "type": "string",
+            "description": "HTTP Not Found Message",
+            "example": "The item does not exist"
+          },
+          "info": {
+            "$ref": "#/components/schemas/AppErrorInfo"
+          }
+        }
+      },
+      "Unauthorized": {
+        "type": "object",
+        "description": "Application error",
+        "required": [
+          "code",
+          "name",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "int32",
+            "description": "HTTP Unauthorized Code",
+            "example": 401
+          },
+          "name": {
+            "type": "string",
+            "description": "HTTP Unauthorized Name",
+            "example": "Unauthorized"
+          },
+          "message": {
+            "type": "string",
+            "description": "HTTP Unauthorized Message",
+            "example": "Client not authenticated"
+          },
+          "info": {
+            "$ref": "#/components/schemas/AppErrorInfo"
+          }
+        }
+      },
+      "Conflict": {
+        "type": "object",
+        "description": "Application error",
+        "required": [
+          "code",
+          "name",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "int32",
+            "description": "HTTP Conflict Code",
+            "example": 401
+          },
+          "name": {
+            "type": "string",
+            "description": "HTTP Conflict Name",
+            "example": "Conflict"
+          },
+          "message": {
+            "type": "string",
+            "description": "HTTP Conflict Message",
+            "example": "Request conflicts with the current state of the server"
+          },
+          "info": {
+            "$ref": "#/components/schemas/AppErrorInfo"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "uuid"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "BORGA API Local Server"
+    },
+    {
+      "url": "https://isel-ipw-2122-1-g06d2.herokuapp.com",
+      "description": "BORGA API Remote Server"
+    }
+  ]
+}

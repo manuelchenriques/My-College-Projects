@@ -1,0 +1,27 @@
+<h1>Login</h1>
+<div>
+    <form class="form-control" action="/login" method="POST">
+        <hr>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Name" name="username" required>
+            <br>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password" name="password" required>
+        </div><br>
+        <div class="form-check float-start">
+            <input class="form-check-input" type="checkbox" id="checkbox" name="checkbox" value="checked">
+            <label class="form-check-label" for="check">Remember me!</label>
+        </div><br>
+        <div style="margin-left:25%;margin-right:25%;">
+            <button type="submit" class="btn btn-lg btn-dark">Submit</button>
+        </div>
+    </form>
+</div><hr>
+<button type="button" class="btn btn-lg btn-success align-content-center" onclick="location.href = '/signin';">Create Account</button>
+
+{{#if error}}
+<p><strong>ERROR:</strong> {{error}}</p>
+<br>
+{{/if}}

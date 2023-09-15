@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/battleships_white_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/battleships_white_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Battleships"
+        android:name=".BattleShipsApplication"
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".views.main.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Battleships"
+            android:screenOrientation="sensorPortrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".views.utility.about.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.users.signIn.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.users.userProfile.UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.lobby.setUp.SetUpGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.utility.leaderboard.LeaderboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.lobby.waitRoom.WaitRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.lobby.playGame.PlayGameActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

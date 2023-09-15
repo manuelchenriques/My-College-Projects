@@ -1,0 +1,1 @@
+São necessárias duas variaveis de ambiente, uma com o nome de GOOGLE_APPLICATION_CREDENTIALS, e outra com o nome de MAPS_API_KEY.
